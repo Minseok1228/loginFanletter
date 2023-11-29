@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import DetailBtn from "./DetailBtn";
 import { useDispatch, useSelector } from "react-redux";
 import { handleEdit } from "../redux/modules/modalOpen";
-import { changeFanletter } from "../redux/modules/fanletters";
-import { changedComment } from "../redux/modules/commentChange";
+import { changeFanLetter } from "../redux/modules/fanletters";
+import { changeComment } from "../redux/modules/commentChange";
 
 function Modal({ letter }) {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ function Modal({ letter }) {
       alert("수정사항을 입력해 주세요");
     } else {
       if (window.confirm("이렇게 수정하시겠습니까")) {
-        dispatch(changeFanletter({ letter, comment: commentChange }));
+        dispatch(changeFanLetter({ letter, comment: commentChange }));
         dispatch(handleEdit(false));
         navigate("/");
       }
@@ -44,7 +44,7 @@ function Modal({ letter }) {
             maxLength={150}
             value={commentChange}
             onChange={(e) => {
-              dispatch(changedComment(e.target.value));
+              dispatch(changeComment(e.target.value));
             }}
           />
         </StLetterBox>

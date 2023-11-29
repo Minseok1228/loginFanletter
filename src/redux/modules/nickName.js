@@ -1,20 +1,14 @@
-const ADD_NICKNAME = "ADD_NICKNAME"
+import { createSlice } from "@reduxjs/toolkit"
 
-export const addNickName = (nickName) => {
-    return {
-        type: ADD_NICKNAME,
-        payload: nickName
-    }
-}
 const initialState = ''
-
-const nickName = (state = initialState, action) => {
-    switch (action.type) {
-        case ADD_NICKNAME:
+const nickNameSlice = createSlice({
+    name: 'nickName',
+    initialState,
+    reducers: {
+        addNickName: (state, action) => {
             return action.payload
-        default:
-            return state;
+        }
     }
-
-}
-export default nickName
+})
+export default nickNameSlice.reducer
+export const { addNickName } = nickNameSlice.actions

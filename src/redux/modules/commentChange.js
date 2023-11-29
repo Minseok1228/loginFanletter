@@ -1,19 +1,14 @@
-const CHANGED_COMMENT = 'CHANGED_COMMENT'
-export const changedComment = (comment) => {
-    return {
-        type: CHANGED_COMMENT,
-        payload: comment
-    }
-}
+import { createSlice } from "@reduxjs/toolkit"
+
 const initialState = ''
-
-const commentChange = (state = initialState, action) => {
-    switch (action.type) {
-        case CHANGED_COMMENT:
+const commentChangeSlice = createSlice({
+    name: "commentChange",
+    initialState: initialState,
+    reducers: {
+        changeComment: (state, action) => {
             return action.payload
-        default:
-            return state;
+        }
     }
-
-}
-export default commentChange
+})
+export default commentChangeSlice.reducer
+export const { changeComment } = commentChangeSlice.actions;

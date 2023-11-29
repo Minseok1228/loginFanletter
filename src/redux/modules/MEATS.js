@@ -1,3 +1,4 @@
+
 const initialState = ["새우살", "살치살", "부채살", "안심", "채끝", "기타"]
 
 const MEATS = (state = initialState, action) => {
@@ -8,3 +9,4 @@ const MEATS = (state = initialState, action) => {
 
 }
 export default MEATS
+

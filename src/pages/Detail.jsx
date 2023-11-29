@@ -5,8 +5,8 @@ import Modal from "../components/Modal";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { handleEdit } from "../redux/modules/modalOpen";
-import { deleteFanletter } from "../redux/modules/fanletters";
-import { changedComment } from "../redux/modules/commentChange";
+import { deleteFanLetter } from "../redux/modules/fanletters";
+import { changeComment } from "../redux/modules/commentChange";
 
 function Detail() {
   const edit = useSelector((state) => {
@@ -20,14 +20,14 @@ function Detail() {
   const param = useParams();
   const deleteLetterBtn = (id) => {
     if (window.confirm("정말 삭제하시겠습니까")) {
-      dispatch(deleteFanletter(id));
+      dispatch(deleteFanLetter(id));
       navigate("/");
     }
   };
 
   const changeCommentBtn = () => {
     dispatch(handleEdit(true));
-    dispatch(changedComment(letter.comment));
+    dispatch(changeComment(letter.comment));
   };
   const goHome = () => {
     navigate("/");

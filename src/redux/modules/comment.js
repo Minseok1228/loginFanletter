@@ -1,20 +1,16 @@
-const ADD_COMMENT = "ADD_COMMENT"
+import { createSlice } from "@reduxjs/toolkit"
 
-export const addComment = (comment) => {
-    return {
-        type: ADD_COMMENT,
-        payload: comment
-    }
-}
 const initialState = ""
 
-const comment = (state = initialState, action) => {
-    switch (action.type) {
-        case ADD_COMMENT:
+const commentSlice = createSlice({
+    name: "comment",
+    initialState: initialState,
+    reducers: {
+        addComment: (state, action) => {
             return action.payload
-        default:
-            return state;
+        }
     }
+})
 
-}
-export default comment
+export default commentSlice.reducer
+export const { addComment } = commentSlice.actions

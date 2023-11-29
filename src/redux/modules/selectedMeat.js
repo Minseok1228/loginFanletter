@@ -1,22 +1,15 @@
-
-const SELECTED_MEAT = "SELECTED_MEAT"
-export const selectMeat = (meat) => {
-    return {
-        type: SELECTED_MEAT,
-        payload: meat,
-    }
-}
+import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = '새우살'
 
-const selectedMeat = (state = initialState, action) => {
-
-    switch (action.type) {
-        case SELECTED_MEAT:
+const selectedMeatSlice = createSlice({
+    name: 'selectedMeat',
+    initialState,
+    reducers: {
+        selectMeat: (state, action) => {
             return action.payload
-        default:
-            return state;
+        }
     }
-
-}
-export default selectedMeat
+})
+export default selectedMeatSlice.reducer
+export const { selectMeat } = selectedMeatSlice.actions

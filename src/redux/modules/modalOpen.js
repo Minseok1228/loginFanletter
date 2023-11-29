@@ -1,20 +1,15 @@
-const HANDLE_EDIT = 'HANDLE_EDIT'
+import { createSlice } from "@reduxjs/toolkit"
 
-export const handleEdit = (boolean) => {
-    return {
-        type: HANDLE_EDIT,
-        payload: boolean,
-    }
-}
 const initialState = false
-
-const modalOpen = (state = initialState, action) => {
-    switch (action.type) {
-        case HANDLE_EDIT:
+const modalOpenSlice = createSlice({
+    name: 'modalOpen',
+    initialState,
+    reducers: {
+        handleEdit: (state, action) => {
             return action.payload
-        default:
-            return state;
+        }
     }
+})
 
-}
-export default modalOpen
+export default modalOpenSlice.reducer
+export const { handleEdit } = modalOpenSlice.actions
