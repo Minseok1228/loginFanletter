@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useId } from "react";
 import Input from "./Input";
 import uuid from "react-uuid";
 import styled from "styled-components";
@@ -12,9 +12,13 @@ function Form() {
   const meats = useSelector((state) => {
     return state.MEATS;
   });
+  // const nickName = useSelector((state) => {
+  //   return state.nickName;
+  // });
   const nickName = useSelector((state) => {
-    return state.nickName;
+    return state.authSlice.userNickname;
   });
+
   const comment = useSelector((state) => {
     return state.comment;
   });
@@ -25,14 +29,19 @@ function Form() {
   const fanletters = useSelector((state) => {
     return state.fanletters;
   });
+  const userId = useSelector((state) => state.authSlice.userId);
+  console.log(userId);
 
   const dispatch = useDispatch();
+  const createdAt = Date.now();
 
   const submitBtnHandler = (e) => {
     e.preventDefault();
-    if (!nickName) {
-      return alert("10자 내의 닉네임을 입력해 주세요.");
-    } else if (!comment) {
+    // if (!nickName) {
+    //   return alert("10자 내의 닉네임을 입력해 주세요.");
+    // } else
+
+    if (!comment) {
       return alert("150자 내의 내용을 입력해 주세요.");
     }
     const newFanLetter = {
@@ -41,7 +50,10 @@ function Form() {
       nickName,
       comment,
       avatar: DEFAULT_IMG,
+      userId: userId,
+      createdAt,
     };
+    console.log(newFanLetter);
     dispatch(addFanLetter([...fanletters, newFanLetter]));
     dispatch(addNickName(""));
     dispatch(addComment(""));
@@ -50,9 +62,9 @@ function Form() {
     dispatch(writeTo(e.target.value));
   };
 
-  const addNickNameFunc = (e) => {
-    dispatch(addNickName(e.target.value));
-  };
+  // const addNickNameFunc = (e) => {
+  //   dispatch(addNickName(e.target.value));
+  // };
   const addCommentFunc = (e) => {
     dispatch(addComment(e.target.value));
   };
@@ -60,12 +72,13 @@ function Form() {
     <StForm onSubmit={submitBtnHandler}>
       <StFormSection>
         <StFormP>닉네임 : </StFormP>
-        <Input
+        <StFormP>{nickName}</StFormP>
+        {/* <Input
           state={nickName}
           dispatch={addNickNameFunc}
           length={10}
           msg={"10자 내로 입력해 주세요."}
-        />
+        /> */}
       </StFormSection>
       <StFormSection>
         <StFormP>내용 : </StFormP>

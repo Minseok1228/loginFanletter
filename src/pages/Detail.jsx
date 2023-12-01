@@ -7,14 +7,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleEdit } from "../redux/modules/modalOpen";
 import { deleteFanLetter } from "../redux/modules/fanletters";
 import { changeComment } from "../redux/modules/commentChange";
+import { useEffect } from "react";
 
 function Detail() {
+  const isLogin = useSelector((state) => state.authSlice.isLoggedIn);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isLogin) {
+      navigate("/login");
+    }
+  }, []);
+
   const edit = useSelector((state) => {
     return state.modalOpen;
   });
   const dispatch = useDispatch();
 
-  const navigate = useNavigate();
   const location = useLocation();
   const letter = location.state;
   const param = useParams();
@@ -32,30 +40,33 @@ function Detail() {
   const goHome = () => {
     navigate("/");
   };
-  console.log(letter);
+  console.log(isLogin);
   return (
     <>
-      <DetailBtn detailBtnFunc={goHome} btnCss={"toHome"}>
-        Home
-      </DetailBtn>
-      <Writeto>{letter.writeto}에게 온 팬레터 입니다.</Writeto>
-      <Container>
-        {edit ? (
-          <Modal letter={letter} />
-        ) : (
-          <>
-            <PrintLetter letter={letter} size={"detail"} />
-            <StBtnBox>
-              <DetailBtn detailBtnFunc={deleteLetterBtn} id={param.id}>
-                삭제
-              </DetailBtn>
-              <DetailBtn detailBtnFunc={changeCommentBtn} id={param.id}>
-                수정
-              </DetailBtn>
-            </StBtnBox>
-          </>
-        )}
-      </Container>
+      {isLogin ? (
+        <>
+          <Writeto>{letter.writeto}에게 온 팬레터 입니다.</Writeto>
+          <Container>
+            {edit ? (
+              <Modal letter={letter} />
+            ) : (
+              <>
+                <PrintLetter letter={letter} size={"detail"} />
+                <StBtnBox>
+                  <DetailBtn detailBtnFunc={deleteLetterBtn} id={param.id}>
+                    삭제
+                  </DetailBtn>
+                  <DetailBtn detailBtnFunc={changeCommentBtn} id={param.id}>
+                    수정
+                  </DetailBtn>
+                </StBtnBox>
+              </>
+            )}
+          </Container>
+        </>
+      ) : (
+        ""
+      )}
     </>
   );
 }
