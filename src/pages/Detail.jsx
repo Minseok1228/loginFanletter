@@ -5,11 +5,13 @@ import Modal from "../components/Modal";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { handleEdit } from "../redux/modules/modalOpen";
-import { deleteFanLetter } from "../redux/modules/fanletters";
+import { __getFanLetters } from "../redux/modules/fanletters";
 import { changeComment } from "../redux/modules/commentChange";
 import { useEffect } from "react";
+import axios from "axios";
 
 function Detail() {
+  const userId = useSelector((state) => state.authSlice.userId);
   const isLogin = useSelector((state) => state.authSlice.isLoggedIn);
   const navigate = useNavigate();
   useEffect(() => {
@@ -26,10 +28,18 @@ function Detail() {
   const location = useLocation();
   const letter = location.state;
   const param = useParams();
-  const deleteLetterBtn = (id) => {
+  const deleteLetterBtn = async (id) => {
+    console.log(id);
     if (window.confirm("정말 삭제하시겠습니까")) {
-      dispatch(deleteFanLetter(id));
-      navigate("/");
+      try {
+        await axios.delete(
+          `${process.env.REACT_APP_SEVER_URL}/fanLetters/${id}`
+        );
+        await dispatch(__getFanLetters());
+        navigate("/");
+      } catch (error) {
+        console.log("삭제에러", error);
+      }
     }
   };
 
@@ -37,10 +47,9 @@ function Detail() {
     dispatch(handleEdit(true));
     dispatch(changeComment(letter.comment));
   };
-  const goHome = () => {
-    navigate("/");
-  };
-  console.log(isLogin);
+
+  console.log("상세레터", letter);
+
   return (
     <>
       {isLogin ? (
@@ -52,14 +61,18 @@ function Detail() {
             ) : (
               <>
                 <PrintLetter letter={letter} size={"detail"} />
-                <StBtnBox>
-                  <DetailBtn detailBtnFunc={deleteLetterBtn} id={param.id}>
-                    삭제
-                  </DetailBtn>
-                  <DetailBtn detailBtnFunc={changeCommentBtn} id={param.id}>
-                    수정
-                  </DetailBtn>
-                </StBtnBox>
+                {userId === letter.userId ? (
+                  <StBtnBox>
+                    <DetailBtn detailBtnFunc={deleteLetterBtn} id={param.id}>
+                      삭제
+                    </DetailBtn>
+                    <DetailBtn detailBtnFunc={changeCommentBtn} id={param.id}>
+                      수정
+                    </DetailBtn>
+                  </StBtnBox>
+                ) : (
+                  ""
+                )}
               </>
             )}
           </Container>

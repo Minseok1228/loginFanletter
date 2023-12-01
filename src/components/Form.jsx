@@ -4,17 +4,17 @@ import uuid from "react-uuid";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { writeTo } from "../redux/modules/writeToMeat";
-import { addFanLetter } from "../redux/modules/fanletters";
+import { __getFanLetters, addFanLetter } from "../redux/modules/fanletters";
 import { addNickName } from "../redux/modules/nickName";
 import { addComment } from "../redux/modules/comment";
+import getformattedDate from "../util/date";
+import axios from "axios";
 const DEFAULT_IMG = "https://t1.daumcdn.net/cfile/tistory/99FD943A5C821D7429";
 function Form() {
   const meats = useSelector((state) => {
     return state.MEATS;
   });
-  // const nickName = useSelector((state) => {
-  //   return state.nickName;
-  // });
+
   const nickName = useSelector((state) => {
     return state.authSlice.userNickname;
   });
@@ -33,13 +33,9 @@ function Form() {
   console.log(userId);
 
   const dispatch = useDispatch();
-  const createdAt = Date.now();
 
-  const submitBtnHandler = (e) => {
+  const submitBtnHandler = async (e) => {
     e.preventDefault();
-    // if (!nickName) {
-    //   return alert("10자 내의 닉네임을 입력해 주세요.");
-    // } else
 
     if (!comment) {
       return alert("150자 내의 내용을 입력해 주세요.");
@@ -51,34 +47,30 @@ function Form() {
       comment,
       avatar: DEFAULT_IMG,
       userId: userId,
-      createdAt,
+      createdAt: Date.now(),
     };
+    await axios.post(
+      `${process.env.REACT_APP_SEVER_URL}/fanLetters`,
+      newFanLetter
+    );
+    await dispatch(__getFanLetters());
+
     console.log(newFanLetter);
-    dispatch(addFanLetter([...fanletters, newFanLetter]));
-    dispatch(addNickName(""));
+    // dispatch(addFanLetter([...fanletters, newFanLetter]));
     dispatch(addComment(""));
   };
   const selectMeat = (e) => {
     dispatch(writeTo(e.target.value));
   };
 
-  // const addNickNameFunc = (e) => {
-  //   dispatch(addNickName(e.target.value));
-  // };
   const addCommentFunc = (e) => {
     dispatch(addComment(e.target.value));
   };
   return (
-    <StForm onSubmit={submitBtnHandler}>
+    <StForm>
       <StFormSection>
         <StFormP>닉네임 : </StFormP>
         <StFormP>{nickName}</StFormP>
-        {/* <Input
-          state={nickName}
-          dispatch={addNickNameFunc}
-          length={10}
-          msg={"10자 내로 입력해 주세요."}
-        /> */}
       </StFormSection>
       <StFormSection>
         <StFormP>내용 : </StFormP>
@@ -98,7 +90,9 @@ function Form() {
           })}
         </StSelect>
       </StFormSection>
-      <StSubmitBtn>팬레터 등록</StSubmitBtn>
+      <StSubmitBtn type="button" onClick={submitBtnHandler}>
+        팬레터 등록
+      </StSubmitBtn>
     </StForm>
   );
 }

@@ -4,7 +4,10 @@ import styled from "styled-components";
 
 function Layout() {
   const navigate = useNavigate();
-  const onHandleLogOut = () => {};
+  const onHandleLogOut = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
   return (
     <>
       <Nav>
@@ -26,6 +29,8 @@ const Nav = styled.div`
   justify-content: space-evenly;
 `;
 const NavBtn = styled.button`
+  cursor: pointer;
+
   width: 120px;
   border: 3px solid black;
   font-size: 1.5rem;

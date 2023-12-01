@@ -7,39 +7,15 @@ const initialState = {
     userNickname: localStorage.getItem("nickname"),
     userId: localStorage.getItem("userId"),
     islogin: false,
-    users: [
-        {
-            userId: 'aaaa',
-            userPassword: 'aaaa',
-            userNickname: 'aaaa'
-        },
-        {
-            userId: 'bbbb',
-            userPassword: 'bbbb',
-            userNickname: 'bbbb'
-        },
-        {
-            userId: 'cccc',
-            userPassword: 'cccc',
-            userNickname: 'cccc'
-        },
-    ]
 }
-export const __getLetters = createAsyncThunk(
-    "getLetters",
-    (payload, thunkAPI) => {
 
-    }
-)
 
 const authSlice = createSlice({
     name: 'authSlice',
     initialState,
     reducers: {
         //유효한 토큰을 가지고 있으면 로그인상태 유지, 아니면 로그아웃처리하여 로그인 페이지로 보내버리기.
-        // checkLogin: (state, action) => {
-        //     return state.isLoggedIn
-        // },
+        //이거해야해!
         signIn: (state, action) => {
             const { avatar, nickname, userId } = action.payload
             localStorage.setItem("avatar", avatar)
@@ -48,7 +24,7 @@ const authSlice = createSlice({
             state.userAvatar = avatar
             state.userNickname = nickname
             state.userId = userId
-            state.isLoggedIn = true
+            // state.isLoggedIn = true
         },
         signUp: (state, action) => {
             const { userId, userPassword } = action.payload

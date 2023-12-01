@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import DetailBtn from "./DetailBtn";
 import { useDispatch, useSelector } from "react-redux";
 import { handleEdit } from "../redux/modules/modalOpen";
-import { changeFanLetter } from "../redux/modules/fanletters";
 import { changeComment } from "../redux/modules/commentChange";
+import axios from "axios";
 
 function Modal({ letter }) {
   const navigate = useNavigate();
@@ -18,12 +18,18 @@ function Modal({ letter }) {
 
   const dispatch = useDispatch();
 
-  const changeCommentBtn = () => {
+  const changeCommentBtn = async () => {
     if (!commentChange) {
       alert("수정사항을 입력해 주세요");
     } else {
       if (window.confirm("이렇게 수정하시겠습니까")) {
-        dispatch(changeFanLetter({ letter, comment: commentChange }));
+        const editLetter = { ...letter, comment: commentChange };
+        console.log(editLetter);
+        await axios.patch(
+          `http://localhost:5000/fanLetters/${letter.id}`,
+          editLetter
+        );
+        // dispatch(changeFanLetter({ letter, comment: commentChange }));
         dispatch(handleEdit(false));
         navigate("/");
       }

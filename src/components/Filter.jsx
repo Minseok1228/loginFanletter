@@ -8,8 +8,9 @@ function Filter() {
     return state.selectedMeat;
   });
   const fanletters = useSelector((state) => {
-    return state.fanletters;
+    return state.fanletters.fanLetters;
   });
+  console.log("fanletters", fanletters);
   const letterFilter = () => {
     const filteredLetters = fanletters.filter((letter) => {
       return letter.writeto === selectedMeat;

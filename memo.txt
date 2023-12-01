@@ -1,0 +1,15 @@
+const response = await axios.get(`${BASE_URL}/user`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    Request
+Method → GET
+URL PATH →  /user
+Header ⬇️​
+{
+	"Authorization": "Bearer AccessToken"
+}
+회원정보확인 => 토큰유효한지체크

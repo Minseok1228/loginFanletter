@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
+import getformattedDate from "../util/date";
 
 function PrintLetter({ letter, size }) {
   const navigate = useNavigate();
@@ -18,6 +19,9 @@ function PrintLetter({ letter, size }) {
         <StLetterBox>
           <StNickNameP size={size}>{letter.nickName}</StNickNameP>
           <StComment size={size}>{letter.comment}</StComment>
+          <StComment size={size}>
+            {getformattedDate(letter.createdAt)}
+          </StComment>
         </StLetterBox>
       </StLi>
     </>
