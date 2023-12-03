@@ -5,8 +5,7 @@ import DetailBtn from "./DetailBtn";
 import { useDispatch, useSelector } from "react-redux";
 import { handleEdit } from "../redux/modules/modalOpen";
 import { changeComment } from "../redux/modules/commentChange";
-import axios from "axios";
-
+import jsonServerInstance from "../api/jsonServer";
 function Modal({ letter }) {
   const navigate = useNavigate();
   const modalopen = useSelector((state) => {
@@ -25,10 +24,7 @@ function Modal({ letter }) {
       if (window.confirm("이렇게 수정하시겠습니까")) {
         const editLetter = { ...letter, comment: commentChange };
         console.log(editLetter);
-        await axios.patch(
-          `http://localhost:5000/fanLetters/${letter.id}`,
-          editLetter
-        );
+        await jsonServerInstance.patch(`/fanLetters/${letter.id}`, editLetter);
         // dispatch(changeFanLetter({ letter, comment: commentChange }));
         dispatch(handleEdit(false));
         navigate("/");

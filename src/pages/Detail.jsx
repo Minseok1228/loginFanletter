@@ -33,7 +33,7 @@ function Detail() {
     if (window.confirm("정말 삭제하시겠습니까")) {
       try {
         await axios.delete(
-          `${process.env.REACT_APP_SEVER_URL}/fanLetters/${id}`
+          `${process.env.REACT_APP_SERVER_URL}/fanLetters/${id}`
         );
         await dispatch(__getFanLetters());
         navigate("/");

@@ -12,7 +12,6 @@ function Home() {
   const isLogin = useSelector((state) => state.authSlice.isLoggedIn);
   console.log(isLogin);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isLogin) {

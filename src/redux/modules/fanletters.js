@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axios from "axios"
-
+import jsonServerInstance from "../../api/jsonServer";
 const initialState =
 {
     fanLetters: [],
@@ -8,15 +8,13 @@ const initialState =
     isError: false,
     error: null,
 }
-console.log(initialState); // Add this line
-
 export const __getFanLetters = createAsyncThunk(
     "getFanLetters",
     async (payload, thunkAPI) => {
         try {
             console.log("Sending Axios request");
 
-            const res = await axios.get(`${process.env.REACT_APP_SEVER_URL}/fanLetters?_sort=createdAt&_order=desc`)
+            const res = await jsonServerInstance.get(`/fanLetters?_sort=createdAt&_order=desc`)
             console.log('res', res)
             console.log('fullfilled', thunkAPI.fulfillWithValue(res.data))
             return thunkAPI.fulfillWithValue(res.data)

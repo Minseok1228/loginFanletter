@@ -1,39 +1,82 @@
-import axios from "axios";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import styled, { css } from "styled-components";
+import React, { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
+import authInstance from "../api/authApi";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signIn } from "../redux/modules/authSlice";
 
 function Profile() {
-  const { userAvatar, userNickname, userId } = useSelector(
-    (state) => state.authSlice
-  );
-  const [cahageUserAvart, setCahageUserAvart] = useState(userAvatar);
+  const accessToken = localStorage.getItem("accessToken");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const getUserData = async () => {
+    try {
+      const userData = await authInstance.get("/user", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(userData.data);
+      setUserData(userData.data);
+      setChangeUserAvarta(userData.data.avatar);
+      setPreview(userData.data.avatar);
+      setChangeUserNickname(userData.data.nickname);
+    } catch (error) {
+      console.log(error);
+      navigate("/login");
+    }
+  };
+  useEffect(() => {
+    getUserData();
+  }, []);
+  const [userData, setUserData] = useState({});
+  console.log(userData);
+
   const [edit, setEdit] = useState(false);
-  const [changeUserNickname, setChangeUserNickname] = useState(userNickname);
+  const [changeUserAvarta, setChangeUserAvarta] = useState("");
+  const [changeUserNickname, setChangeUserNickname] = useState(
+    userData.nickname
+  );
   const onEditHandler = () => {
     setEdit(!edit);
   };
-  const accessToken = localStorage.getItem("accessToken");
-  console.log(accessToken);
   const formData = new FormData();
-  formData.append("avatar", cahageUserAvart);
+  formData.append("avatar", changeUserAvarta);
   formData.append("nickname", changeUserNickname);
   const onHandleProfileChange = async () => {
     try {
-      const res = await axios.patch(
-        "https://moneyfulpublicpolicy.co.kr/profile",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      console.log(res);
+      await authInstance.patch("/profile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
     } catch (error) {
       console.log(error);
     }
+    getUserData();
+    setEdit(false);
+    dispatch(signIn({ ...userData, userId: userData.id }));
+  };
+
+  const fileInput = useRef(null);
+  const [preview, setPreview] = useState();
+
+  const onChange = (e) => {
+    if (changeUserAvarta) {
+      setChangeUserAvarta(e.target.files[0]);
+    }
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setPreview(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   return (
@@ -44,15 +87,25 @@ function Profile() {
           <ImageBox>
             <figure>
               {edit ? (
-                <ImageInput
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    console.log("인푻이미지", e.target.files[0]);
-                  }}
-                />
+                <>
+                  <ProfileImage
+                    src={preview} //url이들어가고
+                    onClick={() => {
+                      fileInput.current.click();
+                    }}
+                  />
+                  <ImageInput
+                    type="file"
+                    accept="image/*"
+                    ref={fileInput}
+                    onChange={onChange}
+                    // onChange={(e) => {
+                    //   setChangeUserAvarta(e.target.files[0]);
+                    // }}
+                  />
+                </>
               ) : (
-                <ProfileImage src={userAvatar} />
+                <ProfileImage src={userData.avatar} />
               )}
             </figure>
           </ImageBox>
@@ -62,9 +115,9 @@ function Profile() {
               onChange={(e) => setChangeUserNickname(e.target.value)}
             />
           ) : (
-            <P>{userNickname}</P>
+            <P>{userData.nickname}</P>
           )}
-          <P>{userId}</P>
+          <P>{userData.id}</P>
           <BtnBox>
             {edit ? (
               <>
@@ -83,6 +136,7 @@ function Profile() {
 
 export default Profile;
 const ImageInput = styled.input`
+  display: none;
   width: 180px;
   height: 180px;
 `;

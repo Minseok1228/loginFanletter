@@ -4,6 +4,7 @@ import styled, { css } from "styled-components";
 import getformattedDate from "../util/date";
 
 function PrintLetter({ letter, size }) {
+  console.log(size);
   const navigate = useNavigate();
   const navigateDetail = (letter) => {
     navigate(`/detail/${letter.id}`, {
@@ -19,9 +20,7 @@ function PrintLetter({ letter, size }) {
         <StLetterBox>
           <StNickNameP size={size}>{letter.nickName}</StNickNameP>
           <StComment size={size}>{letter.comment}</StComment>
-          <StComment size={size}>
-            {getformattedDate(letter.createdAt)}
-          </StComment>
+          <Time size={size}>{getformattedDate(letter.createdAt)}</Time>
         </StLetterBox>
       </StLi>
     </>
@@ -29,6 +28,24 @@ function PrintLetter({ letter, size }) {
 }
 
 export default PrintLetter;
+const Time = styled.p`
+  width: ${({ size }) => (size === "home" ? "300px" : "600px")};
+  ${({ size }) => {
+    if (size === "home") {
+      return css`
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 10px;
+      `;
+    } else {
+      return css`
+        width: 600px;
+      `;
+    }
+  }}
+  font-size: 1rem;
+`;
 
 const StLi = styled.li`
   display: flex;

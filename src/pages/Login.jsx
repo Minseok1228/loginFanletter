@@ -3,26 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import styled, { css } from "styled-components";
 import { signIn, signUp } from "../redux/modules/authSlice";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import authInstance from "../api/authApi";
 
 function Login() {
-  const [data, setData] = useState();
-  const fetchTodos = async () => {
-    const data = await axios.get("https://moneyfulpublicpolicy.co.kr");
-    // const { data } = await axios.get(`${process.env.REACT_APP_SEVER_URL}/todos`)
-    console.log("response", data);
-    setData(data);
-  };
-  console.log("data", data);
-
-  useEffect(() => {
-    //마운트 됐을떄 =>db 값가져옴
-
-    fetchTodos();
-    //return이하 언마운트됐을때
-    return;
-  }, []);
-  // const isLoggedIn = useSelector((state) => state.authSlice.isLoggedIn);
   const [userId, setUserId] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [userNickname, setUserNickname] = useState("");
@@ -39,13 +22,13 @@ function Login() {
       password: userPassword,
     };
     try {
-      const loginUserData = await axios.post(
-        "https://moneyfulpublicpolicy.co.kr/login",
+      const loginUserData = await authInstance.post(
+        "/login?expiresIn=10m",
+        // "/login?expiresIn=10s",
         loginUser
       );
-      console.log("로그인유저", loginUserData);
       localStorage.setItem("accessToken", loginUserData.data.accessToken);
-      dispatch(signIn(loginUserData.data));
+      await dispatch(signIn(loginUserData.data));
 
       navigate("/");
     } catch (error) {
@@ -60,11 +43,10 @@ function Login() {
       nickname: userNickname,
     };
     try {
-      await axios.post("https://moneyfulpublicpolicy.co.kr/register", newUser);
+      await authInstance.post("/register", newUser);
     } catch (error) {
       console.log("회원가입 에러", error);
     }
-    // dispatch(signUp({ userId, userPassword, userNickname }));
     setToggleBtn(true);
   };
   return (

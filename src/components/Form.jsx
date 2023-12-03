@@ -4,11 +4,9 @@ import uuid from "react-uuid";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { writeTo } from "../redux/modules/writeToMeat";
-import { __getFanLetters, addFanLetter } from "../redux/modules/fanletters";
-import { addNickName } from "../redux/modules/nickName";
+import { __getFanLetters } from "../redux/modules/fanletters";
 import { addComment } from "../redux/modules/comment";
-import getformattedDate from "../util/date";
-import axios from "axios";
+import jsonServerInstance from "../api/jsonServer";
 const DEFAULT_IMG = "https://t1.daumcdn.net/cfile/tistory/99FD943A5C821D7429";
 function Form() {
   const meats = useSelector((state) => {
@@ -26,11 +24,7 @@ function Form() {
     return state.writeToMeat;
   });
 
-  const fanletters = useSelector((state) => {
-    return state.fanletters;
-  });
   const userId = useSelector((state) => state.authSlice.userId);
-  console.log(userId);
 
   const dispatch = useDispatch();
 
@@ -49,14 +43,8 @@ function Form() {
       userId: userId,
       createdAt: Date.now(),
     };
-    await axios.post(
-      `${process.env.REACT_APP_SEVER_URL}/fanLetters`,
-      newFanLetter
-    );
+    await jsonServerInstance.post(`/fanLetters`, newFanLetter);
     await dispatch(__getFanLetters());
-
-    console.log(newFanLetter);
-    // dispatch(addFanLetter([...fanletters, newFanLetter]));
     dispatch(addComment(""));
   };
   const selectMeat = (e) => {
@@ -67,7 +55,7 @@ function Form() {
     dispatch(addComment(e.target.value));
   };
   return (
-    <StForm>
+    <StForm onSubmit={submitBtnHandler}>
       <StFormSection>
         <StFormP>닉네임 : </StFormP>
         <StFormP>{nickName}</StFormP>
