@@ -25,7 +25,6 @@ function Modal({ letter }) {
         const editLetter = { ...letter, comment: commentChange };
         console.log(editLetter);
         await jsonServerInstance.patch(`/fanLetters/${letter.id}`, editLetter);
-        // dispatch(changeFanLetter({ letter, comment: commentChange }));
         dispatch(handleEdit(false));
         navigate("/");
       }

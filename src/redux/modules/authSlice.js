@@ -9,7 +9,6 @@ const initialState = {
     islogin: false,
 }
 
-
 const authSlice = createSlice({
     name: 'authSlice',
     initialState,
@@ -17,7 +16,6 @@ const authSlice = createSlice({
         //유효한 토큰을 가지고 있으면 로그인상태 유지, 아니면 로그아웃처리하여 로그인 페이지로 보내버리기.
         //이거해야해!
         signIn: (state, action) => {
-            console.log('로그인 정보', action.payload)
             const { avatar, nickname, userId } = action.payload
             localStorage.setItem("avatar", avatar)
             localStorage.setItem("nickname", nickname)
@@ -27,14 +25,8 @@ const authSlice = createSlice({
             state.userId = userId
             state.isLoggedIn = true
         },
-        // signUp: (state, action) => {
-        //     const { userId, userPassword } = action.payload
-        //     const user = state.users.find(user => user.userId === userId && user.userPassword === userPassword)
-        //     state.isLoggedIn = Boolean(user)
-        // }
-
     }
 
 })
 export default authSlice.reducer
-export const { checkLogin, signUp, signIn } = authSlice.actions
+export const { signIn } = authSlice.actions

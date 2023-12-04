@@ -4,7 +4,6 @@ import styled, { css } from "styled-components";
 import getformattedDate from "../util/date";
 
 function PrintLetter({ letter, size }) {
-  console.log(size);
   const navigate = useNavigate();
   const navigateDetail = (letter) => {
     navigate(`/detail/${letter.id}`, {

@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import axios from "axios"
 import jsonServerInstance from "../../api/jsonServer";
 const initialState =
 {
@@ -13,10 +12,10 @@ export const __getFanLetters = createAsyncThunk(
     async (payload, thunkAPI) => {
         try {
             console.log("Sending Axios request");
+            const res = await jsonServerInstance.get(`/fanLetters`)
 
-            const res = await jsonServerInstance.get(`/fanLetters?_sort=createdAt&_order=desc`)
-            console.log('res', res)
-            console.log('fullfilled', thunkAPI.fulfillWithValue(res.data))
+            // const res = await jsonServerInstance.get(`/fanLetters?_sort=createdAt&_order=desc`)
+            //desc를 넣으면 오히려 과거순
             return thunkAPI.fulfillWithValue(res.data)
         } catch (error) {
             console.log('error', error)
@@ -25,34 +24,6 @@ export const __getFanLetters = createAsyncThunk(
         }
     }
 )
-// export const __addFanLetters = createAsyncThunk(
-//     "addFanLetters",
-//     async (payload,thunkAPI)=>{
-//         try {
-//             const res = await axios.post('http://localhost:5000/fanLetters',payload)
-
-//         } catch (error) {
-
-//         }
-//     }
-// )
-//data에서 id로 가져옴=>프로필?
-// const fetchUserById = createAsyncThunk(
-//     'users/fetchByIdStatus',
-//     async (userId: number, thunkAPI) => {
-//       const response = await userAPI.fetchById(userId)
-//       return response.data
-//     }
-//   )
-// extraReducers: (builder) => {
-//     builder.addCase(fetchUserById.fulfilled, (state, action) => {
-//       state.entities.push(action.payload)
-//호출방법
-//dispatch(fetchUserById(123))
-
-//extraReducers []사용이유 =>  createAsyncThunk가 생성하는 액션타입 = 일반 문자열이 아닌 특별한 문자열
-//
-
 const fanlettersSlice = createSlice({
     name: "fanletters",
     initialState: initialState,
@@ -98,7 +69,6 @@ const fanlettersSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.error = action.payload
-
         }
     }
 })

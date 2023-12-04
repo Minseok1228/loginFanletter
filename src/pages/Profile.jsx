@@ -4,6 +4,8 @@ import authInstance from "../api/authApi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signIn } from "../redux/modules/authSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Profile() {
   const accessToken = localStorage.getItem("accessToken");
@@ -18,13 +20,12 @@ function Profile() {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(userData.data);
       setUserData(userData.data);
       setChangeUserAvarta(userData.data.avatar);
       setPreview(userData.data.avatar);
       setChangeUserNickname(userData.data.nickname);
     } catch (error) {
-      console.log(error);
+      toast(error.response.data.message);
       navigate("/login");
     }
   };
@@ -32,13 +33,10 @@ function Profile() {
     getUserData();
   }, []);
   const [userData, setUserData] = useState({});
-  console.log(userData);
 
   const [edit, setEdit] = useState(false);
   const [changeUserAvarta, setChangeUserAvarta] = useState("");
-  const [changeUserNickname, setChangeUserNickname] = useState(
-    userData.nickname
-  );
+  const [changeUserNickname, setChangeUserNickname] = useState("");
   const onEditHandler = () => {
     setEdit(!edit);
   };
@@ -65,9 +63,7 @@ function Profile() {
   const [preview, setPreview] = useState();
 
   const onChange = (e) => {
-    if (changeUserAvarta) {
-      setChangeUserAvarta(e.target.files[0]);
-    }
+    setChangeUserAvarta(e.target.files[0]);
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -82,6 +78,7 @@ function Profile() {
   return (
     <>
       <Container>
+        <ToastContainer />
         <Wrap>
           <Title>프로필 관리</Title>
           <ImageBox>
@@ -182,11 +179,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   margin: auto;
-`;
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 `;
 const Input = styled.input`
   text-align: center;

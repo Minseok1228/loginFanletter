@@ -10,7 +10,6 @@ function Filter() {
   const fanletters = useSelector((state) => {
     return state.fanletters.fanLetters;
   });
-  console.log("fanletters", fanletters);
   const letterFilter = () => {
     const filteredLetters = fanletters.filter((letter) => {
       return letter.writeto === selectedMeat;

@@ -9,7 +9,6 @@ function Header() {
   const meats = useSelector((state) => {
     return state.MEATS;
   });
-  console.log(meats);
   const dispatch = useDispatch();
   const handleMeatSelect = (meat) => {
     dispatch(selectMeat(meat));

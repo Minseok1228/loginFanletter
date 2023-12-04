@@ -4,6 +4,8 @@ import styled, { css } from "styled-components";
 import { signIn, signUp } from "../redux/modules/authSlice";
 import { useNavigate } from "react-router-dom";
 import authInstance from "../api/authApi";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
   const [userId, setUserId] = useState("");
@@ -32,7 +34,7 @@ function Login() {
 
       navigate("/");
     } catch (error) {
-      console.log("로그인 에러", error);
+      toast(error.response.data.message);
     }
   };
 
@@ -44,14 +46,16 @@ function Login() {
     };
     try {
       await authInstance.post("/register", newUser);
+      toast("회원가입완료!");
+      setToggleBtn(true);
     } catch (error) {
-      console.log("회원가입 에러", error);
+      toast(error.response.data.message);
     }
-    setToggleBtn(true);
   };
   return (
     <>
       <Container>
+        <ToastContainer />
         <Wrap toggle={toggleBtn}>
           <Title>{toggleBtn ? "로그인" : "회원가입"}</Title>
           <Form>

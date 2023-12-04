@@ -48,8 +48,6 @@ function Detail() {
     dispatch(changeComment(letter.comment));
   };
 
-  console.log("상세레터", letter);
-
   return (
     <>
       {isLogin ? (
